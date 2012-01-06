@@ -1,0 +1,21 @@
+Source: pcre
+Section: devel
+Priority: extra
+Maintainer: Andrew Lee <hyunchul2.lee@samsung.com>, Piotr Fatiga <p.fatyga@samsung.com>
+Uploaders: Koeun Choi <koeun.choi@samsung.com>, Ming Jin <ming79.jin@samsung.com>, Yunchan Cho <yunchan.cho@samsung.com>
+Build-Depends: debhelper (>= 5), autotools-dev
+Standards-Version: 3.7.2
+
+Package: libpcre
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Replaces: pcre
+Description: regular expression library - runtime library
+
+Package: libpcre-dev
+Architecture: any
+Section: libs
+Depends: libpcre (= ${Source-Version}) 
+Replaces: pcre-dev
+Description: regular expression dev library - runtime library
