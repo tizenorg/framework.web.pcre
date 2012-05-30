@@ -6,6 +6,7 @@ Release: 1
 Summary: Perl-compatible regular expression library - Tools
 URL: http://www.pcre.org/
 Source: http://downloads.sourceforge.net/project/pcre/pcre/%{version}/%{name}-%{version}.tar.bz2
+Source1001: packaging/pcre.manifest 
 License: BSD
 Group: System/Libraries
 BuildRequires: autoconf, automake, libtool
@@ -47,6 +48,7 @@ Static library for %{name}.
 %setup -q
 
 %build
+cp %{SOURCE1001} .
 
 ./autogen.sh --prefix=%{_prefix}
 make %{?_smp_mflags}
@@ -64,17 +66,21 @@ rm -rf $RPM_BUILD_ROOT/usr/share/doc
 
 
 %files
+%manifest pcre.manifest
 %{_bindir}/pcregrep
 %{_bindir}/pcretest
 
 %files -n lib%{name}
+%manifest pcre.manifest
 %{_libdir}/*.so.*
 
 %files -n lib%{name}-devel
+%manifest pcre.manifest
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*
 %{_includedir}/*.h
 %{_bindir}/pcre-config
 
 %files -n lib%{name}-static
+%manifest pcre.manifest
 %{_libdir}/*.a
