@@ -31,7 +31,7 @@ LDFLAGS += -Wl,--rpath=$(PREFIX)/lib -Wl,--as-needed
 config.status: 
 	dh_testdir
 	# Add here commands to configure the package.
-	CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" ./autogen.sh --prefix=$(PREFIX) 
+	CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" ./autogen.sh --prefix=$(PREFIX) --enable-utf8 --enable-unicode-properties --enable-newline-is-any --disable-stack-for-recursion
 
 build: build-stamp
 
