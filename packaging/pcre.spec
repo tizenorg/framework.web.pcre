@@ -64,6 +64,7 @@ rm -rf $RPM_BUILD_ROOT/usr/share/doc
 
 
 %files
+%manifest pcre.manifest
 %{_bindir}/pcregrep
 %{_bindir}/pcretest
 
