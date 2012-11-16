@@ -1,7 +1,7 @@
 %define keepstatic 1
 
 Name: pcre
-Version: 7.6
+Version: 7.9
 Release: 1
 Summary: Perl-compatible regular expression library - Tools
 URL: http://www.pcre.org/
@@ -48,7 +48,7 @@ Static library for %{name}.
 
 %build
 
-./autogen.sh --prefix=%{_prefix}
+./autogen.sh --prefix=%{_prefix} --enable-utf8 --enable-unicode-properties --enable-newline-is-any --disable-stack-for-recursion
 make %{?_smp_mflags}
 
 %install
