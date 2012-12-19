@@ -57,6 +57,22 @@ static const int kVecSize = (1 + kMaxArgs) * 3;  // results + PCRE workspace
 // Special object that stands-in for no argument
 Arg RE::no_arg((void*)NULL);
 
+// This is for ABI compatibility with old versions of pcre (pre-7.6),
+// which defined a global no_arg variable instead of putting it in the
+// RE class.  This works on GCC >= 3, at least.  It definitely works
+// for ELF, but may not for other object formats (Mach-O, for
+// instance, does not support aliases.)  We could probably have a more
+// inclusive test if we ever needed it.  (Note that not only the
+// __attribute__ syntax, but also __USER_LABEL_PREFIX__, are
+// gnu-specific.)
+#if defined(__GNUC__) && __GNUC__ >= 3 && defined(__ELF__)
+# define ULP_AS_STRING(x)            ULP_AS_STRING_INTERNAL(x)
+# define ULP_AS_STRING_INTERNAL(x)   #x
+# define USER_LABEL_PREFIX_STR       ULP_AS_STRING(__USER_LABEL_PREFIX__)
+extern Arg no_arg
+  __attribute__((alias(USER_LABEL_PREFIX_STR "_ZN7pcrecpp2RE6no_argE")));
+#endif
+
 // If a regular expression has no error, its error_ field points here
 static const string empty_string;
 
@@ -441,21 +457,27 @@ bool RE::Extract(const StringPiece& rewrite,
   // Note that it's legal to escape a character even if it has no
   // special meaning in a regular expression -- so this function does
   // that.  (This also makes it identical to the perl function of the
-  // same name; see `perldoc -f quotemeta`.)
+  // same name; see `perldoc -f quotemeta`.)  The one exception is
+  // escaping NUL: rather than doing backslash + NUL, like perl does,
+  // we do '\0', because pcre itself doesn't take embedded NUL chars.
   for (int ii = 0; ii < unquoted.size(); ++ii) {
     // Note that using 'isalnum' here raises the benchmark time from
     // 32ns to 58ns:
-    if ((unquoted[ii] < 'a' || unquoted[ii] > 'z') &&
-        (unquoted[ii] < 'A' || unquoted[ii] > 'Z') &&
-        (unquoted[ii] < '0' || unquoted[ii] > '9') &&
-        unquoted[ii] != '_' &&
-        // If this is the part of a UTF8 or Latin1 character, we need
-        // to copy this byte without escaping.  Experimentally this is
-        // what works correctly with the regexp library.
-        !(unquoted[ii] & 128)) {
+    if (unquoted[ii] == '\0') {
+      result += "\\0";
+    } else if ((unquoted[ii] < 'a' || unquoted[ii] > 'z') &&
+               (unquoted[ii] < 'A' || unquoted[ii] > 'Z') &&
+               (unquoted[ii] < '0' || unquoted[ii] > '9') &&
+               unquoted[ii] != '_' &&
+               // If this is the part of a UTF8 or Latin1 character, we need
+               // to copy this byte without escaping.  Experimentally this is
+               // what works correctly with the regexp library.
+               !(unquoted[ii] & 128)) {
       result += '\\';
+      result += unquoted[ii];
+    } else {
+      result += unquoted[ii];
     }
-    result += unquoted[ii];
   }
 
   return result;
@@ -583,14 +605,14 @@ bool RE::Rewrite(string *out, const StringPiece &rewrite,
         if (start >= 0)
           out->append(text.data() + start, vec[2 * n + 1] - start);
       } else if (c == '\\') {
-        out->push_back('\\');
+        *out += '\\';
       } else {
         //fprintf(stderr, "invalid rewrite pattern: %.*s\n",
         //        rewrite.size(), rewrite.data());
         return false;
       }
     } else {
-      out->push_back(c);
+      *out += c;
     }
   }
   return true;

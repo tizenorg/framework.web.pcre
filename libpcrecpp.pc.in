@@ -10,4 +10,3 @@ Description: PCRECPP - C++ wrapper for PCRE
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -lpcre -lpcrecpp
 Cflags: -I${includedir}
-
