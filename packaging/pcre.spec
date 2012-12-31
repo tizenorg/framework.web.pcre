@@ -1,7 +1,7 @@
 %define keepstatic 1
 
 Name: pcre
-Version: 7.9
+Version: 7.7
 Release: 1
 Summary: Perl-compatible regular expression library - Tools
 URL: http://www.pcre.org/
