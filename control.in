@@ -1,0 +1,9 @@
+Package: pcre-7.6-@MACHINE@
+Priority: optional
+Version: 7.6
+Section: opensource
+Architecture: @HOST@
+Maintainer: Piotr Fatyga p.fatyga@samsung.com>
+Source: pcre-7.6
+Depends: 
+Description: pcre-7.6
