@@ -1,0 +1,13 @@
+build_log
+*.log
+*.pyc
+usr
+opt
+*.o
+*.os
+*.exe
+packages
+binaries
+*.ipk
+control
+*~

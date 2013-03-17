@@ -2,7 +2,7 @@
 
 Name: pcre
 Version: 7.7
-Release: 1
+Release: 2
 Summary: Perl-compatible regular expression library - Tools
 URL: http://www.pcre.org/
 Source: http://downloads.sourceforge.net/project/pcre/pcre/%{version}/%{name}-%{version}.tar.bz2
