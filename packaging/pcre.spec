@@ -2,7 +2,7 @@
 
 Name: pcre
 Version: 7.7
-Release: 2
+Release: 3
 Summary: Perl-compatible regular expression library - Tools
 URL: http://www.pcre.org/
 Source: http://downloads.sourceforge.net/project/pcre/pcre/%{version}/%{name}-%{version}.tar.bz2
@@ -49,10 +49,14 @@ Static library for %{name}.
 %build
 
 ./autogen.sh --prefix=%{_prefix} --enable-utf8 --enable-unicode-properties --enable-newline-is-any --disable-stack-for-recursion
+
+
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+mkdir -p %{buildroot}/usr/share/license
+cp LICENCE %{buildroot}/usr/share/license/%{name}
 %make_install
 
 rm -rf $RPM_BUILD_ROOT/usr/share/man
@@ -67,6 +71,7 @@ rm -rf $RPM_BUILD_ROOT/usr/share/doc
 %manifest pcre.manifest
 %{_bindir}/pcregrep
 %{_bindir}/pcretest
+%{_datadir}/license/%{name}
 
 %files -n lib%{name}
 %{_libdir}/*.so.*
