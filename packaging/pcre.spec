@@ -53,6 +53,8 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+mkdir -p %{buildroot}/usr/share/license
+cp LICENCE %{buildroot}/usr/share/license/%{name}
 %make_install
 
 rm -rf $RPM_BUILD_ROOT/usr/share/man
@@ -67,6 +69,7 @@ rm -rf $RPM_BUILD_ROOT/usr/share/doc
 %manifest pcre.manifest
 %{_bindir}/pcregrep
 %{_bindir}/pcretest
+%{_datadir}/license/%{name}
 
 %files -n lib%{name}
 %{_libdir}/*.so.*
