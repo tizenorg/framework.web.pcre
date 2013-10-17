@@ -2,7 +2,7 @@
 
 Name: pcre
 Version: 7.7
-Release: 2
+Release: 3
 Summary: Perl-compatible regular expression library - Tools
 URL: http://www.pcre.org/
 Source: http://downloads.sourceforge.net/project/pcre/pcre/%{version}/%{name}-%{version}.tar.bz2
@@ -49,6 +49,8 @@ Static library for %{name}.
 %build
 
 ./autogen.sh --prefix=%{_prefix} --enable-utf8 --enable-unicode-properties --enable-newline-is-any --disable-stack-for-recursion
+
+
 make %{?_smp_mflags}
 
 %install
