@@ -13,6 +13,7 @@ BuildRequires: autoconf, automake, libtool
 %description
 Tools and Utilities coming with %{name}
 
+
 %package -n lib%{name}
 Summary: Perl-compatible regular expression library
 Group: System/Libraries
@@ -47,7 +48,7 @@ Static library for %{name}.
 
 %build
 
-./autogen.sh --prefix=%{_prefix} --enable-utf8 --enable-unicode-properties --enable-newline-is-any --disable-stack-for-recursion
+%autogen.sh --enable-utf8 --enable-unicode-properties --enable-newline-is-any --disable-stack-for-recursion
 
 
 make %{?_smp_mflags}
