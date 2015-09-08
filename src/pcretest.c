@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 
 #ifdef HAVE_CONFIG_H
-#include "../config.h"
+#include "config.h"
 #endif
 
 #include <ctype.h>
@@ -49,7 +49,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <errno.h>
 
 #ifdef SUPPORT_LIBREADLINE
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <readline/readline.h>
 #include <readline/history.h>
 #endif
@@ -69,6 +71,9 @@ input mode under Windows. */
 #define INPUT_MODE   "r"
 #define OUTPUT_MODE  "wb"
 
+#define isatty _isatty         /* This is what Windows calls them, I'm told */
+#define fileno _fileno
+
 #else
 #include <sys/time.h>          /* These two includes are needed */
 #include <sys/resource.h>      /* for setrlimit(). */
@@ -86,8 +91,8 @@ Although pcre_internal.h does itself include pcre.h, we explicitly include it
 here before pcre_internal.h so that the PCRE_EXP_xxx macros get set
 appropriately for an application, not for building PCRE. */
 
-#include "../pcre.h"
-#include "src/pcre_internal.h"
+#include "pcre.h"
+#include "pcre_internal.h"
 
 /* We need access to the data tables that PCRE uses. So as not to have to keep
 two copies, we include the source file here, changing the names of the external
@@ -103,7 +108,7 @@ symbols to prevent clashes. */
 #define _pcre_utt_names        utt_names
 #define _pcre_OP_lengths       OP_lengths
 
-#include "src/pcre_tables.c"
+#include "pcre_tables.c"
 
 /* We also need the pcre_printint() function for printing out compiled
 patterns. This function is in a separate file so that it can be included in
@@ -115,7 +120,7 @@ contained in this file. We uses it here also, in cases when the locale has not
 been explicitly changed, so as to get consistent output from systems that
 differ in their output from isprint() even in the "C" locale. */
 
-#include "../pcre_printint.src"
+#include "pcre_printint.src"
 
 #define PRINTHEX(c) (locale_set? isprint(c) : PRINTABLE(c))
 
@@ -125,7 +130,7 @@ testing the POSIX interface, though this is not available via the standard
 Makefile. */
 
 #if !defined NOPOSIX
-#include "src/pcreposix.h"
+#include "pcreposix.h"
 #endif
 
 /* It is also possible, for the benefit of the version currently imported into
@@ -1247,10 +1252,18 @@ while (!done)
 
       case '<':
         {
-        int x = check_newline(pp, outfile);
-        if (x == 0) goto SKIP_DATA;
-        options |= x;
-        while (*pp++ != '>');
+        if (strncmp((char *)pp, "JS>", 3) == 0)
+          {
+          options |= PCRE_JAVASCRIPT_COMPAT;
+          pp += 3;
+          }
+        else
+          {
+          int x = check_newline(pp, outfile);
+          if (x == 0) goto SKIP_DATA;
+          options |= x;
+          while (*pp++ != '>');
+          }
         }
       break;
 

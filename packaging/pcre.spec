@@ -1,12 +1,12 @@
 %define keepstatic 1
 
 Name: pcre
-Version: 7.6
-Release: 1
+Version: 7.7
+Release: 4
 Summary: Perl-compatible regular expression library - Tools
 URL: http://www.pcre.org/
 Source: http://downloads.sourceforge.net/project/pcre/pcre/%{version}/%{name}-%{version}.tar.bz2
-License: BSD
+License: BSD-2.0
 Group: System/Libraries
 BuildRequires: autoconf, automake, libtool
 
@@ -48,11 +48,16 @@ Static library for %{name}.
 
 %build
 
-./autogen.sh --prefix=%{_prefix}
+%autogen.sh --enable-utf8 --enable-unicode-properties --enable-newline-is-any --disable-stack-for-recursion
+
+
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+mkdir -p %{buildroot}/usr/share/license
+cp LICENCE %{buildroot}/usr/share/license/%{name}
+cp LICENCE %{buildroot}/usr/share/license/lib%{name}
 %make_install
 
 rm -rf $RPM_BUILD_ROOT/usr/share/man
@@ -64,11 +69,14 @@ rm -rf $RPM_BUILD_ROOT/usr/share/doc
 
 
 %files
+%manifest pcre.manifest
 %{_bindir}/pcregrep
 %{_bindir}/pcretest
+%{_datadir}/license/%{name}
 
 %files -n lib%{name}
 %{_libdir}/*.so.*
+%{_datadir}/license/lib%{name}
 
 %files -n lib%{name}-devel
 %{_libdir}/*.so
