@@ -29,8 +29,7 @@ for the POSIX-style functions is called pcreposix.h.
 
 %package -n lib%{name}-devel
 Summary: Development files for %{name}
-Group: Development/Libraries
-Requires: lib%{name} = %{version}-%{release}
+Group: Development/Libraries Requires: lib%{name} = %{version}-%{release}
 
 %description -n lib%{name}-devel
 Development files (Headers, libraries for dynamic linking, etc) for %{name}.
@@ -57,7 +56,6 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 mkdir -p %{buildroot}/usr/share/license
 cp LICENCE %{buildroot}/usr/share/license/%{name}
-cp LICENCE %{buildroot}/usr/share/license/lib%{name}
 %make_install
 
 rm -rf $RPM_BUILD_ROOT/usr/share/man
@@ -76,7 +74,6 @@ rm -rf $RPM_BUILD_ROOT/usr/share/doc
 
 %files -n lib%{name}
 %{_libdir}/*.so.*
-%{_datadir}/license/lib%{name}
 
 %files -n lib%{name}-devel
 %{_libdir}/*.so
